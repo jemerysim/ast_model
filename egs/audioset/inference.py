@@ -11,7 +11,6 @@ import numpy as np
 import torch
 import torchaudio
 
-torchaudio.set_audio_backend("soundfile")       # switch backend
 basepath = os.path.dirname(os.path.dirname(sys.path[0]))
 sys.path.append(basepath)
 from src.models import ASTModel

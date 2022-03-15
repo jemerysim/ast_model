@@ -12,7 +12,7 @@
 
 set -x
 # comment this line if not running on sls cluster
-. /data/sls/scratch/share-201907/slstoolchainrc
+# . /data/sls/scratch/share-201907/slstoolchainrc
 source ../../venvast/bin/activate
 export TORCH_HOME=../../pretrained_models
 
@@ -26,14 +26,14 @@ then
   bal=none
   lr=5e-5
   epoch=25
-  tr_data=/data/sls/scratch/yuangong/aed-pc/src/enhance_label/datafiles_local/balanced_train_data_type1_2_mean.json
+  tr_data=/data/datafiles/train_data.json
 else
   bal=bal
   lr=1e-5
   epoch=5
-  tr_data=/data/sls/scratch/yuangong/aed-pc/src/enhance_label/datafiles_local/whole_train_data.json
+  tr_data=/data/datafiles/train_data.json
 fi
-te_data=/data/sls/scratch/yuangong/audioset/datafiles/eval_data.json
+te_data=/data/datafiles/eval_data.json
 freqm=48
 timem=192
 mixup=0.5

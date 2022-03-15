@@ -20,16 +20,24 @@ import models
 import numpy as np
 from traintest import train, validate
 
-print("I am process %s, running on %s: starting (%s)" % (os.getpid(), os.uname()[1], time.asctime()))
+# print("I am process %s, running on %s: starting (%s)" % (os.getpid(), os.uname()[1], time.asctime()))
+
+'''
+cd ../..
+cd Users\jerem
+cd ast\src
+python run.py --data-train ./data/datafiles/esc_train_data_1.json --data-val ./data/datafiles/esc_eval_data_1.json --label-csv ./data/esc_class_labels_indices.csv --n_class 50 --num-workers 1 --exp-dir exp_dir
+
+'''
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--data-train", type=str, default='', help="training data json")
 parser.add_argument("--data-val", type=str, default='', help="validation data json")
 parser.add_argument("--data-eval", type=str, default='', help="evaluation data json")
 parser.add_argument("--label-csv", type=str, default='', help="csv with class labels")
-parser.add_argument("--n_class", type=int, default=527, help="number of classes")
+parser.add_argument("--n_class", type=int, default=50, help="number of classes")
 parser.add_argument("--model", type=str, default='ast', help="the model used")
-parser.add_argument("--dataset", type=str, default="audioset", help="the dataset used", choices=["audioset", "esc50", "speechcommands"])
+parser.add_argument("--dataset", type=str, default="esc50", help="the dataset used", choices=["audioset", "esc50", "speechcommands"])
 
 parser.add_argument("--exp-dir", type=str, default="", help="directory to dump experiments")
 parser.add_argument('--lr', '--learning-rate', default=0.001, type=float, metavar='LR', help='initial learning rate')
@@ -50,7 +58,7 @@ parser.add_argument("--bal", type=str, default=None, help="use balanced sampling
 # the stride used in patch spliting, e.g., for patch size 16*16, a stride of 16 means no overlapping, a stride of 10 means overlap of 6.
 parser.add_argument("--fstride", type=int, default=10, help="soft split freq stride, overlap=patch_size-stride")
 parser.add_argument("--tstride", type=int, default=10, help="soft split time stride, overlap=patch_size-stride")
-parser.add_argument('--imagenet_pretrain', help='if use ImageNet pretrained audio spectrogram transformer model', type=ast.literal_eval, default='True')
+parser.add_argument('--imagenet_pretrain', help='if use ImageNet pretrained audio spectrogram transformer model', type=ast.literal_eval, default='False')
 parser.add_argument('--audioset_pretrain', help='if use ImageNet and audioset pretrained audio spectrogram transformer model', type=ast.literal_eval, default='False')
 
 args = parser.parse_args()
@@ -90,13 +98,13 @@ if args.model == 'ast':
                                   input_tdim=target_length[args.dataset], imagenet_pretrain=args.imagenet_pretrain,
                                   audioset_pretrain=args.audioset_pretrain, model_size='base384')
 
-print("\nCreating experiment directory: %s" % args.exp_dir)
-os.makedirs("%s/models" % args.exp_dir)
-with open("%s/args.pkl" % args.exp_dir, "wb") as f:
-    pickle.dump(args, f)
-
-print('Now starting training for {:d} epochs'.format(args.n_epochs))
-train(audio_model, train_loader, val_loader, args)
+# print("\nCreating experiment directory: %s" % args.exp_dir)
+# os.makedirs("%s/models_test" % args.exp_dir)
+# with open("%s/args.pkl" % args.exp_dir, "wb") as f:
+#     pickle.dump(args, f)
+if __name__ == '__main__':
+    print('Now starting training for {:d} epochs'.format(args.n_epochs))
+    train(audio_model, train_loader, val_loader, args)
 
 # for speechcommands dataset, evaluate the best model on validation set on the test set
 if args.dataset == 'speechcommands':
